@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <title>Document</title>
+    <style>
+        .parent_container{
+            width: 100%;
+            height: 100%;
+            margin: 50px auto;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+        }
+        .main_container{
+            min-height: 399px;
+            max-height: 400px;
+            width: 400px;
+            border: 1px solid black;
+            display: grid;
+            grid-template-columns: repeat(3,1fr);
+            background-color: aqua;
+        }
+        .grid{
+            font-size: 30px;
+            border: 1px solid rgb(126, 69, 69);
+            text-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .startBtn{
+            color: green;
+        }
+        .pauseBtn{
+            color: rgb(0, 0, 255)
+        }
+        .resetBtn{
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="parent_container">
+        <div class="font-bold">Tic tac toe</div>
+        <div class="button_container flex gap-10">
+            <button class="startBtn" onclick="startGame()">Start Game</button>
+            <button class="pauseBtn" onclick="pauseGame()">pause game</button>
+            <button class="resetBtn" onclick="handleResetBtn()">reset game</button>
+        </div>
+        <div class="main_container">
+            <div class="grid cursor-pointer" id="0" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="1" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="2" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="3" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="4" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="5" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="6" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="7" onclick="handleStartGame(this)"></div>
+            <div class="grid cursor-pointer" id="8" onclick="handleStartGame(this)"></div>
+        </div>
+        
+    </div>
+
+    <script>
+        let winningPatterns = [
+            [0,1,2],
+            [3,4,5],
+            [6,7,8],
+            [0,3,6],
+            [1,4,7],
+            [2,5,8],
+            [0,4,8],
+            [2,4,6]
+        ]
+        let counter = 0;
+        let xList = [];
+        let oList = [];
+        let isGameStart = false;
+        let isGamePaused = false;
+
+        function startGame(){
+            isGameStart = true;
+            alert("Game Started");
+        }
+        function pauseGame(){
+            isGameStart = false;
+            alert("Game Paused");
+        }
+
+        function handleResetBtn(){
+            alert("Game Reset");
+            resetGame();
+        }
+
+        function handleStartGame(elem){
+            if(!isGameStart){
+                return;
+            }
+            let id = parseInt(elem.id);
+            console.log(id);
+            counter++;
+            if(counter % 2 ===0){
+                $(`#${id}`).text("X");
+                xList.push(id);
+                if(checkVic(xList)){
+                    $(`#${id}`).text("X");
+                    alert("X WINS");
+                    resetGame();
+                    return;
+                }
+            }else{
+                $(`#${id}`).text("O");
+                oList.push(id);
+                if(checkVic(oList)){
+                    $(`#${id}`).text("O");
+                    alert("O WINS");
+                    resetGame();
+                    return;
+                }
+            }
+            if(counter>=9){
+                alert("Its a draw");
+                resetGame();
+            }
+        }
+
+        function highlightWinningComb(playerMoves){
+            let winCombo = checkVic(playerMoves);
+            if(winCombo){
+                winCombo.forEach(cell => {
+                    $(`#${cell}`).addClass("winner");
+                });
+            }
+        }
+
+        function checkVic(playerMoves){
+            return winningPatterns.some(elems => elems.every(item=> playerMoves.includes(item)
+            ));
+        }
+
+        function resetGame(){
+            counter = 0;
+            $(".grid").text("");
+            xList = [];
+            oList = [];
+        }
+    </script>
+</body>
+</html>
